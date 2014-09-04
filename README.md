@@ -7,4 +7,5 @@ http://www.google.com/trends/hottrends
 
 Our study shows that there is a high correlation between a news getting hot and number of visits to those pages in the Wiki that are related to that news. Over the past 3 month, we have used wiki page count trend to discover the hot news. 
 
-
+More details can be found in the following document:
+https://docs.google.com/document/d/1MnPIjNzDTG3zf9PMAcPuh1oUWQmA8QwkjaHDCgs-llY/edit
