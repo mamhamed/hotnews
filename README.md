@@ -1,6 +1,6 @@
 hotnews
 =======
-Wikipedia is indeep one of the largest crowd-based source of information in today's world. There are many algorithms that gets their input from Wikipedia or use wiki knowlege as the prior to the analysis. Examples include text mining, semantic web etc.
+Wikipedia is, indeed, one of the largest crowd-based source of information in today's world. There are many algorithms that gets their input from Wikipedia or use wiki knowlege as the prior to the analysis. Examples include text mining, semantic web etc.
 
 In this project, we use the wikipedia page access count as an evidence to detect hot stories. Hot stories is defined those news that drags many people attention. Almost all the news media have a section for hot news. Google also provides hot trends based on people search:
 http://www.google.com/trends/hottrends
