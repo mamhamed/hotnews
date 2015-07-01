@@ -13,5 +13,4 @@ http://hameddaily.blogspot.com/2015/06/hot-news-detection-using-wikipedia_29.htm
 ### Run the code
 * Download the source code
 * Set the R working directory to the location of this source code
-* Run the main.R
-* * From command line just run Rscript main.R
+* Run the main.R (from command line just run Rscript main.R)
