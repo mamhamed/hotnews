@@ -1,18 +1,12 @@
-#setwd("~/workspace/R/wiki/wikiSrc")
 library("DBI")
 library("RSQLite")
-#source("./wikiSrc/add_data2DB.R")
-
-## constants and parameters
-OBSERVATION_INTERVAL_IN_SECONDS = 48*3600
-MIN_WIKI_ARTICLE_ACCESS_COUNT = 50
 
 if (!exists("all_data"))
   all_data <- data.frame("Hamed","ll",100,0) 
 
 ## get all the files and process them
 
-all_files <- list.files(path="/mnt/Data/wikiHourlyData/")
+all_files <- list.files(path=path.page.access.data)
 now <- floor(as.double(as.POSIXlt(Sys.time(),tz="GMT")))
 # there is a bug that it generates many of a word. the following line is a work around
 
@@ -36,7 +30,7 @@ for (filename in all_files){
   mytime <- paste(hour,":00:00 GMT",sep="")
   tt <- as.double(as.POSIXlt(paste(mydate,mytime)))  
   
-  local_filename <- paste("/mnt/Data/wikiHourlyData/",filename,sep="")
+  local_filename <- paste(path.page.access.data,filename,sep="")
   
   ## look back window size e.g. 48*3600 means 48 hours before
   
@@ -49,7 +43,7 @@ for (filename in all_files){
       data <- tryCatch(
       {
         read.delim(gzfile(local_filename), sep=" ", header=FALSE, 
-               skip=500000, nrows=1200000,
+               skip=FILE.START, nrows=FILE.STEP,
                colClasses=c('character','character','double','double'))
           }, error = function(e) {
             print(e)
