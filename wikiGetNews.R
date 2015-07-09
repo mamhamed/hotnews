@@ -70,9 +70,10 @@ tryCatch({
       if (delta_of_news < 72*3600){  
         
         #get the main story photo
-        news_image <- getImage2(news_source)
-        if (is.null(news_image))
-          news_image <- getImage2(paste("http://en.wikipedia.com/wiki/",words,sep=""))
+        news_image = data.frame(url="", width=0, height=0)#<- getImage2(news_source)
+        #if (is.null(news_image))
+        #  news_image <- getImage2(paste("http://en.wikipedia.com/wiki/",words,sep=""))
+        
         i = 0
         if (is.null(news_image)){
            for (onetitle in all_titles){
