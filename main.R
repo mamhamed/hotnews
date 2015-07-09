@@ -1,11 +1,13 @@
-#Sys.sleep(600)
+#!/usr/bin/Rscript
+
+source('setup.R')
 
 while(TRUE){
-  source("./wikiSrc/download_index_html.R")
-  source("./wikiSrc/loadData_hour.R")
-  source("./wikiSrc/trend.R") 
+  source("download_index_html.R")
+  source("loadData_hour.R")
+  source("trend.R") 
   print("finding news ...")
-  source("./wikiSrc/wikiGetNews.R")
+  source("wikiGetNews.R")
   print("current time is ")
   print(as.POSIXlt(Sys.time(),tz="GMT"))
   now <- floor(as.double(as.POSIXlt(Sys.time(),tz="GMT"))) 
