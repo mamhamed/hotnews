@@ -1,6 +1,5 @@
-source('./wikiSrc/getImage2.R')
-source('./wikiSrc/ExtractRelatedNews.R')
-source('./wikiSrc/getNewsCategory.R')
+source('ExtractRelatedNews.R')
+source('getNewsCategory.R')
 
 library("RSQLite")
 require("XML")
