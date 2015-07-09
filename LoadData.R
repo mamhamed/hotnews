@@ -1,7 +1,6 @@
-#setwd("~/workspace/R/wiki/wikiSrc")
 all_data <- data.frame(word="Hamed",count=100,day=0)
 
-all_files <- list.files(path="/mnt/Data/wikiHourlyData/")
+all_files <- list.files(path=path.page.access.data)
 for (filename in all_files){
   #filename = all_files[11]
   print(filename)
@@ -9,7 +8,7 @@ for (filename in all_files){
   day <- as.integer(substr(filename,start=18,stop=19))
   hour <- as.integer(substr(filename,start=21,stop=22))
   
-  local_filename <- paste("/mnt/Data/wikiHourlyData/",filename,sep="")
+  local_filename <- paste(path.page.access.data,filename,sep="")
   
   if (hour >=4 && hour<=20 ){
     data <- tryCatch(
