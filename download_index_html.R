@@ -3,13 +3,13 @@ require(XML)
 
 DOWNLOAD_INTERVAL_IN_DAYS = 2
 
-url = "http://dumps.wikimedia.org/other/pagecounts-raw/2014/2014-03/"
+url = "http://dumps.wikimedia.org/other/pagecounts-raw/2015/2015-07/"
 
 doc = htmlTreeParse(paste(url,"index.html",sep=""), useInternalNodes = T)
 
-all_files <- xpathSApply(doc, "//a[contains(@href, 'pagecounts-2014')]", xmlValue)
+all_files <- xpathSApply(doc, "//a[contains(@href, 'pagecounts-2015')]", xmlValue)
 
-all_local_files <- list.files(path="/mnt/Data/wikiHourlyData/")
+all_local_files <- list.files(path=path.page.access.data)
 
 day_now <- as.integer(substr(as.character(Sys.Date()),start=9,stop=11))
 
@@ -21,7 +21,7 @@ for (pagecounts in all_files){
     
     if (day_now - day < DOWNLOAD_INTERVAL_IN_DAYS){
        print(paste("Downloading ...",pagecounts))
-       local_filename = paste("/mnt/Data/wikiHourlyData/",pagecounts,sep="")
+       local_filename = paste(path.page.access.data, pagecounts,sep="")
       
        download.file(url = paste(url,pagecounts,sep=""), 
                   destfile = local_filename) 
