@@ -5,10 +5,7 @@ list.of.missing.packages <- list.of.required.packages[!(list.of.required.package
 if(length(list.of.missing.packages) > 0) install.packages(list.of.missing.packages)
 
 #directory ame needs to be end with /
-if (grepl('windows',Sys.info()['sysname'], ignore.case=TRUE))
-  path.page.access.data = "C:\\"
-else
-  path.page.access.data = "./wikiHourlyData/"
+path.page.access.data = "./wikiHourlyData/"
 dir.create(path.page.access.data, showWarnings = FALSE)
   
 ## constants and parameters
