@@ -55,7 +55,8 @@ status <- dbWriteTable(conn = dbResult, append = TRUE, name = "HOTSTORIES",
                        value = new_hot_stories[-which(new_hot_stories$word=="toBeRemoved"),])
 
 pendingHotStories = dbListResults(dbResult)
-if (length(pendingHotStories) > 0)
-    dbClearResult(pendingHotStories[[1]])
+
+#if (length(pendingHotStories) > 0)
+#    dbClearResult(pendingHotStories[[1]])
 
 dbDisconnect(conn=dbResult)
