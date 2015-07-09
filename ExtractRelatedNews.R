@@ -12,7 +12,8 @@ ExtractRelatedNews <- function(all_titles, newsSource)
     news_source2 <- sub('\\[\\[1\\]\\]\n<link>',"",news_source2)
     news_source2 <- sub('</link> \n',"",news_source2)
     
-    news_image <- getImage2(news_source2)
+    #news_image <- getImage2(news_source2)
+    news_image <- data.frame(url="", width=0, height=0)
     
     news_title <- toString.XMLNode(xpathSApply(onetitle,"//item/title")[i])
     news_title <- sub('\\[\\[1\\]\\]\n<title>',"",news_title)
