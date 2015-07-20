@@ -1,8 +1,6 @@
 #setwd("~/workspace/R/wiki/wikiSrc")
 
 ## constants and parameters
-SD_MULTIPLE_FACTOR = 5
-MIN_LAST_HOUR_ACCESS_COUNT = 1000
 
 last_hour <- all_data[all_data$time == max(all_data$time),]
 
@@ -10,6 +8,7 @@ last_hour <- last_hour[which(last_hour$count > MIN_LAST_HOUR_ACCESS_COUNT),]
 
 new_hot_stories <- data.frame(word="toBeRemoved", count=1, 
                               timestamp=0, mean=0, std=0)
+
 for (word in last_hour$word){
   
   word_info <- all_data[all_data$word == word,]
@@ -21,9 +20,9 @@ for (word in last_hour$word){
   
   word_count = word_info$count
   
-    if (length(word_count) > 5){
-    m=mean(word_count[-1])
-    s=sqrt(var(word_count[-1]))
+    if (length(word_count) > 18){
+    m=mean(word_count[-(1:6)])
+    s=sqrt(var(word_count[-(1:6)]))
     #print(paste(word,word_count[1],m,s,sep="  "))
     if (is.na(s)){
       s = Inf
@@ -45,10 +44,10 @@ for (word in last_hour$word){
 write("\n","result.txt", append=TRUE)
 
 ## write new hot stories to database
-if (!file.exists("wikiResult.db")){
+if (!file.exists(paste(path.wiki.result.db,"wikiResult.db",sep=""))){
     print("result db does not exist, creating...")
 }
-dbResult <- dbConnect(SQLite(), dbname="wikiResult.db")
+dbResult <- dbConnect(SQLite(), dbname=paste(path.wiki.result.db,"wikiResult.db",sep=""))
 
 status <- dbWriteTable(conn = dbResult, append = TRUE, name = "HOTSTORIES",
                        row.names = FALSE,
