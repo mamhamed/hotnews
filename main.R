@@ -7,7 +7,7 @@ while(TRUE){
   source("loadData_hour.R")
   source("trend.R") 
   print("finding news ...")
-  source("wikiGetNews.R")
+  source("wikiGetNewsGoogle.R")
   print("current time is ")
   print(as.POSIXlt(Sys.time(),tz="GMT"))
   now <- floor(as.double(as.POSIXlt(Sys.time(),tz="GMT"))) 
