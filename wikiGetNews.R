@@ -2,9 +2,11 @@ source('ExtractRelatedNews.R')
 source('getNewsCategory.R')
 
 library("RSQLite")
+library('rjson')
+library('RCurl')
 require("XML")
 
-db_wikiResult <- dbConnect(SQLite(), dbname="wikiResult.db")
+db_wikiResult <- dbConnect(SQLite(), dbname=paste(path.wiki.result.db,"wikiResult.db",sep=""))
 
 tryCatch({
   res <- dbSendQuery(conn = db_wikiResult, 
@@ -16,10 +18,14 @@ tryCatch({
   
   dbDisconnect(conn=db_wikiResult)
   
-  db_news <- dbConnect(SQLite(), dbname="wikiNews.db")
+  if (!file.exists(paste(path.wiki.result.db,"wikiNews.db",sep=""))){
+    print("result db does not exist, creating...")
+  }
+  db_news <- dbConnect(SQLite(), dbname=paste(path.wiki.news.db,"wikiNews.db",sep=""))
+  
+  print("wikiNews.db is open...")
   for (words in unique(allwords$word)){
-    
-    mywords <- gsub(pattern="\u2012|\u2013|\u2014",replacement=" ",words)
+    mywords <- gsub(pattern="\u2012|\u2013|\u2014|\u2015",replacement=" ",words)
     mywords <- gsub(pattern="[_]",replacement=" ", mywords)
     mywords <- URLencode(mywords)
     print(paste("search hot news for" ,mywords))
@@ -104,24 +110,35 @@ tryCatch({
         #check if the NewsTable Exists
         tables <- dbListTables(db_news)
         
-        if (length(which(tables == "NewsTable"))>0)
-           dbSendQuery(conn = db_news, 
-                      paste("delete from NewsTable where news_source = '", news_source, "'",  sep=""))
-          
+        news_dataframe = data.frame(news_title = news_title, 
+                                    news_source = news_source, 
+                                    news_description = news_desc,
+                                    news_time = news_time,
+                                    news_category = news_category,
+                                    timestamp=now,
+                                    image_source=news_image$url,
+                                    image_width=news_image$width,
+                                    image_height=news_image$height,
+                                    hotindex = hottyindex,
+                                    hotwords = words
+        )
+        
+        if (length(which(tables == "NewsTable"))>0){
+           del_query <- dbSendQuery(conn = db_news, 
+                          paste("delete from NewsTable where news_source = '", news_source, "'",  sep=""))
+           del_info <- dbGetInfo(del_query)
+           if (del_info$rowsAffected == 0){ ##no such a source before
+             print("sending to zapier...")
+             httpPOST("https://zapier.com/hooks/catch/bqp5gd/", content=toJSON(news_dataframe))   
+           }
+             
+        }
+        
         status <- dbWriteTable(conn = db_news, append = TRUE, name = "NewsTable",
-                             row.names = FALSE,
-                             value = data.frame(news_title = news_title, 
-                                                news_source = news_source, 
-                                                news_description = news_desc,
-                                                news_time = news_time,
-                                                news_category = news_category,
-                                                timestamp=now,
-                                                image_source=news_image$url,
-                                                image_width=news_image$width,
-                                                image_height=news_image$height,
-                                                hotindex = hottyindex,
-                                                hotwords = words
-                                                ) )  
+                             row.names = TRUE,
+                             value =  news_dataframe)
+        
+        
         if (!is.null(relatedNewsData)){
           if (length(which(tables == "RelatedNewsTable"))>0)
             dbSendQuery(conn = db_news, 
