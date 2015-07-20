@@ -8,9 +8,17 @@ http://www.google.com/trends/hottrends
 Our study shows that there is a high correlation between a news getting hot and number of visits to those pages in the Wiki that are related to that news. Over the past 3 month, we have used wiki page count trend to discover the hot news. 
 
 For more information see this post:
-http://hameddaily.blogspot.com/2015/06/hot-news-detection-using-wikipedia_29.html
+<a href='http://hameddaily.blogspot.com/2015/06/hot-news-detection-using-wikipedia_29.html'>Hot news detection using Wikipedia</a>
+
 
 ### Run the code
 * Download the source code
 * Set the R working directory to the location of this source code
-* Run the main.R (from command line just run Rscript main.R)
+* Run the main.R 
+```
+./main.R
+```
+### Web Service 
+This code is runing on an aws instance as a service. Read the instruction here:
+
+http://hotnews.ask-tell.info/howto.html
