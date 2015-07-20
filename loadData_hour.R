@@ -39,37 +39,29 @@ for (filename in all_files){
     if ( length(which(all_data$time == tt)) == 0 ){
     
       ## load the data
+      cat(paste("loading ", local_filename, " ...\n"))
       
-      data <- tryCatch(
-      {
-        read.delim(gzfile(local_filename), sep=" ", header=FALSE, 
-               skip=FILE.START, nrows=FILE.STEP,
-               colClasses=c('character','character','double','double'))
-          }, error = function(e) {
-            print(e)
-            print("error in reading the access files")
-            data <- data.frame("Hamed","ll",100,0) 
-          }, finally = {
-            print("error in reading the access files")
-            data <- data.frame("Hamed","ll",100,0) 
-          }
-      )
-
+      ##### read file
+      #f <- gzfile(local_filename)
+      data <- read.delim(gzfile(local_filename), sep=" ", 
+                       colClasses=c('character','character','double','double'))
+      #close(f)
+      #data <- as.data.frame(data_tmp)
+      #rm("data_tmp")
+      
       print("Done with loading the file into memory")
       
       ## remove page size
-      
       data <- data[,-4]
+      data <- data[data[,1]=="en",]
       
       ## extract en webpages that have atleast 500 hit/hour
-      
-      endata <- data[which(data[,1]=="en"),]
-      x <- endata[which(endata[,3] > MIN_WIKI_ARTICLE_ACCESS_COUNT),-1]
+      data <- data[which(data[,3] > MIN_WIKI_ARTICLE_ACCESS_COUNT),-1]
       
       ## if there are some page
       
-      if (dim(x)[1]*dim(x)[2] != 0){
-        x <- data.frame(word=as.character(x[,1]),count=x[,2],time=tt)
+      if (dim(data)[1]*dim(data)[2] != 0){
+        data <- data.frame(word=as.character(data[,1]),count=data[,2],time=tt)
         
         ## Add data to the DB
         
@@ -77,9 +69,9 @@ for (filename in all_files){
         
         ## append data to the memory
         if (!exists("all_data")){
-          all_data <- x  
+          all_data <- data  
         }else{
-          all_data <- rbind(all_data,x)
+          all_data <- rbind(all_data,data)
         }
       }
       
@@ -87,6 +79,8 @@ for (filename in all_files){
   
   }#history if
 }
+
+rm("data")
 
 ## creating the database
 if (!file.exists("wikiData.db")){
@@ -106,7 +100,7 @@ status <- dbWriteTable(conn = db, append = TRUE, name = "PAGEACCESS",
 
 
 ## remove old data no longer in observation interval
-
+print("[wikiData.db] remove old data no longer in observation interval")
 dbSendQuery(conn = db, 
             paste("DELETE FROM PAGEACCESS WHERE time <",  
             (now - OBSERVATION_INTERVAL_IN_SECONDS), sep="" ))
